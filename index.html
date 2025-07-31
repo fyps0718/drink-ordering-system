@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>飲料點餐系統</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(45deg, #ff6b6b, #feca57);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+    }
+
+    .section h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    select, input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+      margin: 5px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-danger {
+      background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    }
+
+    .btn-success {
+      background: linear-gradient(45deg, #48cae4, #0077b6);
+    }
+
+    .menu-item {
+      background: white;
+      margin-bottom: 15px;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #eee;
+      transition: all 0.3s;
+    }
+
+    .menu-item:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .menu-item.selected {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .drink-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .drink-info input[type="radio"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+
+    .drink-name {
+      font-weight: 600;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .drink-price {
+      color: #ff6b6b;
+      font-weight: 700;
+      margin-left: 10px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .option-group label {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    th {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+      background: #f8f9fa;
+    }
+
+    .order-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .total-section {
+      background: linear-gradient(45deg, #48cae4, #0077b6);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .total-amount {
+      font-size: 2em;
+      font-weight: 700;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      min-width: 200px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      border: 1px solid #ddd;
+      overflow: hidden;
+    }
+
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      text-align: left;
+      border: none;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    .dropdown-item:hover {
+      background: #f8f9fa;
+    }
+
+    .dropdown-item:active {
+      background: #e9ecef;
+    }
+
+    /* 彈出視窗樣式 */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-body {
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .edit-controls {
+      display: flex;
+      gap: 15px;
+      align-items: end;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .edit-controls label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .edit-controls select {
+      min-width: 200px;
+    }
+
+    .menu-edit-list {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      background: #f8f9fa;
+      min-height: 300px;
+    }
+
+    .edit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #eee;
+    }
+
+    .edit-item input {
+      flex: 1;
+      margin: 0;
+    }
+
+    .edit-item .price-input {
+      width: 80px;
+    }
+
+    .edit-item .delete-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .edit-item .delete-btn:hover {
+      background: #ee5a52;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 2em;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .dropdown-content {
+        min-width: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧋 飲料點餐系統</h1>
+      <p>輕鬆管理團體訂飲料，讓點餐變得更簡單！</p>
+    </div>
+
+    <div class="content">
+      <!-- 飲料店選擇區域 -->
+      <div class="section">
+        <h2>📍 選擇飲料店</h2>
+        <div class="form-group">
+          <label for="store-select">飲料店：</label>
+          <select id="store-select">
+            <option value="">請選擇飲料店</option>
+            <option value="milkshop">迷客夏 Milk Shop</option>
+            <option value="50lan">50嵐</option>
+            <option value="comebuy">清心福全</option>
+            <option value="gongcha">貢茶</option>
+            <option value="truedan">珍煮丹</option>
+            <option value="songben">松本鮮奶茶</option>
+            <option value="seventea">七盞茶</option>
+            <option value="dejeng">得正</option>
+            <option value="yimuday">一沐日</option>
+            <option value="custom">自訂菜單</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <button class="btn" id="upload-menu-btn">📁 上傳自訂菜單 (CSV)</button>
+          <div class="dropdown" style="position: relative;">
+            <button class="btn" id="download-menu-btn">📥 下載菜單範本</button>
+            <div class="dropdown-content" id="download-menu-dropdown" style="display: none;">
+              <button class="dropdown-item" onclick="downloadMenuTemplate('csv')">📄 CSV 格式</button>
+              <button class="dropdown-item" onclick="downloadMenuTemplate('excel')">📊 Excel 格式</button>
+              <button class="dropdown-item" onclick="downloadMenuTemplate('json')">🔧 JSON 格式</button>
+              <button class="dropdown-item" onclick="downloadMenuTemplate('txt')">📝 文字格式</button>
+            </div>
+          </div>
+          <button class="btn" id="edit-menu-btn">✏️ 編輯菜單</button>
+        </div>
+        <input type="file" id="menu-upload" accept=".csv" style="display:none" />
+      </div>
+
+      <!-- 菜單顯示區域 -->
+      <div class="section" id="menu-section" style="display:none">
+        <h2>🍹 菜單</h2>
+        <div id="menu-container"></div>
+      </div>
+
+      <!-- 訂單管理區域 -->
+      <div class="section">
+        <h2>📋 訂單管理</h2>
+        <input type="text" class="search-box" id="search-orders" placeholder="🔍 搜尋老師姓名或飲料..." />
+
+        <div class="total-section" id="total-section" style="display:none">
+          <div>總計金額</div>
+          <div class="total-amount" id="total-amount">$0</div>
+          <div id="order-count">共 0 杯飲料</div>
+        </div>
+
+        <div class="order-list" id="order-summary"></div>
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="btn btn-success" id="download-csv" style="display:none">📥 下載訂單 CSV</button>
+          <button class="btn btn-danger" id="clear-all-orders" style="display:none">🗑️ 清空所有訂單</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 菜單編輯彈出視窗 -->
+  <div id="menu-edit-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>✏️ 編輯菜單</h2>
+        <button class="close-btn" onclick="closeMenuEditModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="edit-controls">
+          <label for="edit-store-select">選擇要編輯的店家：</label>
+          <select id="edit-store-select">
+            <option value="">請選擇店家</option>
+            <option value="milkshop">迷客夏 Milk Shop</option>
+            <option value="50lan">50嵐</option>
+            <option value="comebuy">清心福全</option>
+            <option value="gongcha">貢茶</option>
+            <option value="truedan">珍煮丹</option>
+            <option value="songben">茶之魔手</option>
+            <option value="seventea">七盞茶</option>
+            <option value="dejeng">得正</option>
+            <option value="yimuday">一沐日</option>
+          </select>
+          <button class="btn" onclick="addNewDrink()">➕ 新增飲料</button>
+        </div>
+
+        <div id="menu-edit-list" class="menu-edit-list">
+          <p>請先選擇要編輯的店家</p>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn" onclick="saveMenuChanges()">💾 儲存變更</button>
+          <button class="btn btn-secondary" onclick="closeMenuEditModal()">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+const menus = {
+  milkshop: [
+    // 愛茶的牛系列 (L杯) - 南部價格
+    { name: "娜杯紅茶 (L)", price: 35 },
+    { name: "英倫伯爵紅茶 (L)", price: 30 },
+    { name: "大正醇香紅茶 (L)", price: 30 },
+    { name: "原片初露青茶 (L)", price: 30 },
+    { name: "琥珀高峰烏龍 (L)", price: 30 },
+    { name: "水之森玄米抹茶 (L)", price: 45 },
+    // 牧場鮮奶茶系列 - 南部價格
+    { name: "娜杯紅茶拿鐵 (M)", price: 50 },
+    { name: "娜杯紅茶拿鐵 (L)", price: 60 },
+    { name: "伯爵紅茶拿鐵 (M)", price: 45 },
+    { name: "伯爵紅茶拿鐵 (L)", price: 55 },
+    { name: "大正紅茶拿鐵 (M)", price: 45 },
+    { name: "大正紅茶拿鐵 (L)", price: 55 },
+    { name: "琥珀烏龍拿鐵 (M)", price: 45 },
+    { name: "琥珀烏龍拿鐵 (L)", price: 55 },
+    { name: "茉香綠茶拿鐵 (M)", price: 45 },
+    { name: "茉香綠茶拿鐵 (L)", price: 55 },
+    { name: "珍珠紅茶拿鐵 (M)", price: 55 },
+    { name: "珍珠紅茶拿鐵 (L)", price: 65 },
+    // 綠光牧場鮮奶系列 (M杯) - 南部價格
+    { name: "芋頭鮮奶 (M)", price: 65 },
+    { name: "手炒黑糖鮮奶 (M)", price: 65 },
+    { name: "法芙娜純可可鮮奶 (M)", price: 65 },
+    { name: "玄米抹茶拿鐵 (M)", price: 65 },
+    { name: "珍珠鮮奶 (M)", price: 65 },
+    { name: "嫩仙草凍奶 (M)", price: 65 },
+    // 手作特調系列 (L杯) - 南部價格
+    { name: "熟釀青梅綠 (L)", price: 55 },
+    { name: "蜜桃烏龍 (L)", price: 65 },
+    { name: "白甘蔗青茶 (L)", price: 65 },
+    { name: "冬瓜青茶 (L)", price: 50 },
+    { name: "柳丁綠茶 (L)", price: 60 },
+    { name: "青檸香茶 (L)", price: 65 },
+    { name: "蜂蜜檸檬晶凍 (L)", price: 55 },
+    { name: "養樂多綠 (L)", price: 50 }
+  ],
+  "50lan": [
+    // 找好茶系列 - 南部價格
+    { name: "茉莉綠茶 (M)", price: 30 },
+    { name: "茉莉綠茶 (L)", price: 35 },
+    { name: "阿薩姆紅茶 (M)", price: 30 },
+    { name: "阿薩姆紅茶 (L)", price: 35 },
+    { name: "四季春青茶 (M)", price: 30 },
+    { name: "四季春青茶 (L)", price: 35 },
+    { name: "黃金烏龍 (M)", price: 30 },
+    { name: "黃金烏龍 (L)", price: 35 },
+    { name: "檸檬綠 (M)", price: 45 },
+    { name: "檸檬綠 (L)", price: 50 },
+    { name: "梅の綠 (M)", price: 45 },
+    { name: "梅の綠 (L)", price: 50 },
+    { name: "桔子綠 (M)", price: 45 },
+    { name: "桔子綠 (L)", price: 50 },
+    { name: "8冰綠 (M)", price: 45 },
+    { name: "8冰綠 (L)", price: 50 },
+    { name: "養樂多綠 (M)", price: 45 },
+    { name: "養樂多綠 (L)", price: 50 },
+    { name: "旺來紅 (M)", price: 45 },
+    { name: "旺來紅 (L)", price: 50 },
+    { name: "柚子紅 (M)", price: 45 },
+    { name: "柚子紅 (L)", price: 50 },
+    { name: "鮮柚綠 (M)", price: 55 },
+    { name: "鮮柚綠 (L)", price: 60 },
+    // 找口感系列 - 南部價格
+    { name: "四季春+珍波椰 (M)", price: 35 },
+    { name: "四季春+珍波椰 (L)", price: 40 },
+    { name: "波霸紅茶 (M)", price: 35 },
+    { name: "波霸紅茶 (L)", price: 40 },
+    { name: "波霸綠茶 (M)", price: 35 },
+    { name: "波霸綠茶 (L)", price: 40 },
+    { name: "波霸青茶 (M)", price: 35 },
+    { name: "波霸青茶 (L)", price: 40 },
+    { name: "波霸烏龍 (M)", price: 35 },
+    { name: "波霸烏龍 (L)", price: 40 },
+    { name: "波霸奶茶 (M)", price: 45 },
+    { name: "波霸奶茶 (L)", price: 50 },
+    { name: "波霸奶綠 (M)", price: 45 },
+    { name: "波霸奶綠 (L)", price: 50 },
+    { name: "波霸烏龍奶茶 (M)", price: 45 },
+    { name: "波霸烏龍奶茶 (L)", price: 50 },
+    { name: "珍珠紅茶 (M)", price: 35 },
+    { name: "珍珠紅茶 (L)", price: 40 },
+    { name: "珍珠綠茶 (M)", price: 35 },
+    { name: "珍珠綠茶 (L)", price: 40 },
+    { name: "珍珠青茶 (M)", price: 35 },
+    { name: "珍珠青茶 (L)", price: 40 },
+    { name: "珍珠烏龍 (M)", price: 35 },
+    { name: "珍珠烏龍 (L)", price: 40 },
+    { name: "珍珠奶茶 (M)", price: 45 },
+    { name: "珍珠奶茶 (L)", price: 50 },
+    { name: "珍珠奶綠 (M)", price: 45 },
+    { name: "珍珠奶綠 (L)", price: 50 },
+    { name: "椰果奶茶 (M)", price: 45 },
+    { name: "椰果奶茶 (L)", price: 50 },
+    { name: "布丁奶茶 (M)", price: 55 },
+    { name: "布丁奶茶 (L)", price: 60 },
+    { name: "布丁奶綠 (M)", price: 55 },
+    { name: "布丁奶綠 (L)", price: 60 },
+    { name: "布丁紅茶 (M)", price: 45 },
+    { name: "布丁紅茶 (L)", price: 50 },
+    { name: "布丁綠茶 (M)", price: 45 },
+    { name: "布丁綠茶 (L)", price: 50 },
+    { name: "布丁青茶", price: 50 },
+    { name: "布丁烏龍", price: 50 },
+    // 找奶茶系列
+    { name: "奶茶", price: 50 },
+    { name: "奶綠", price: 50 },
+    { name: "紅茶瑪奇朵", price: 50 },
+    { name: "烏龍瑪奇朵", price: 50 },
+    { name: "四季奶青", price: 50 },
+    { name: "黃金烏龍奶茶", price: 50 },
+    { name: "阿華田", price: 55 },
+    // 找新鮮系列
+    { name: "檸檬汁", price: 55 },
+    { name: "金桔檸檬", price: 55 },
+    { name: "檸檬梅汁", price: 60 },
+    { name: "檸檬養樂多", price: 65 },
+    { name: "8冰茶", price: 50 },
+    { name: "柚子茶", price: 50 },
+    { name: "鮮柚汁", price: 65 },
+    { name: "葡萄柚多多", price: 65 },
+    // 紅茶拿鐵系列
+    { name: "紅茶拿鐵", price: 60 },
+    { name: "綠茶拿鐵", price: 60 },
+    { name: "黃金烏龍拿鐵", price: 60 },
+    { name: "阿華田拿鐵", price: 65 },
+    // 找冰淇淋系列
+    { name: "冰淇淋紅茶", price: 50 },
+    { name: "芒果青", price: 50 },
+    { name: "荔枝烏龍", price: 50 }
+  ],
+  comebuy: [
+    { name: "紅茶", price: 25 },
+    { name: "綠茶", price: 25 },
+    { name: "烏龍茶", price: 30 },
+    { name: "珍珠奶茶", price: 40 },
+    { name: "珍珠綠茶", price: 40 },
+    { name: "檸檬綠茶", price: 35 },
+    { name: "冬瓜茶", price: 30 },
+    { name: "蜂蜜檸檬", price: 40 },
+    { name: "多多綠茶", price: 45 },
+    { name: "布丁奶茶", price: 50 }
+  ],
+  gongcha: [
+    { name: "阿里山烏龍茶", price: 35 },
+    { name: "茉莉綠茶", price: 35 },
+    { name: "四季春茶", price: 35 },
+    { name: "珍珠奶茶", price: 55 },
+    { name: "珍珠綠茶", price: 55 },
+    { name: "布丁奶茶", price: 60 },
+    { name: "芋頭奶茶", price: 65 },
+    { name: "黑糖珍珠奶茶", price: 70 },
+    { name: "招牌奶茶", price: 60 },
+    { name: "檸檬蜜茶", price: 50 }
+  ],
+  truedan: [
+    // 匠心職人黑糖系列
+    { name: "黑糖珍珠鮮奶 (M)", price: 55 },
+    { name: "黑糖珍珠鮮奶 (L)", price: 65 },
+    { name: "黑糖粉粿鮮奶 (M)", price: 55 },
+    { name: "黑糖粉粿鮮奶 (L)", price: 65 },
+    { name: "黑糖珍珠厚鮮奶 (M)", price: 65 },
+    { name: "黑糖珍珠厚鮮奶 (L)", price: 75 },
+    { name: "手熬黑糖冬瓜茶 (L)", price: 45 },
+    // 煮丹私房奶茶系列
+    { name: "波波粿粿鮮奶茶 (M)", price: 60 },
+    { name: "波波粿粿鮮奶茶 (L)", price: 70 },
+    { name: "珍珠奶茶 (M)", price: 50 },
+    { name: "珍珠奶茶 (L)", price: 60 },
+    { name: "姍姍紅茶拿鐵 (M)", price: 45 },
+    { name: "姍姍紅茶拿鐵 (L)", price: 55 },
+    { name: "泰泰鮮奶茶 (M)", price: 50 },
+    { name: "泰泰鮮奶茶 (L)", price: 60 },
+    { name: "煮母奶茶 (M)", price: 40 },
+    { name: "煮母奶茶 (L)", price: 50 },
+    // 島嶼果茶系列 (L杯限定)
+    { name: "青檸桂花釀粿粿 (L)", price: 65 },
+    { name: "西瓜烏龍 (L)", price: 60 },
+    { name: "橙香翡翠 (L)", price: 55 },
+    { name: "多多春 (L)", price: 55 },
+    { name: "葡柚翡翠 (L)", price: 60 },
+    { name: "蜂蜜檸檬菊花茶 (L)", price: 50 },
+    // 世界茶光譜系列 (L杯)
+    { name: "雲霧烏龍 (L)", price: 45 },
+    { name: "不知春 (L)", price: 40 },
+    { name: "復刻紅茶 (L)", price: 35 },
+    { name: "老派蕎麥 (L)", price: 40 }
+  ],
+  songben: [
+    // 茶之魔手 - 台灣茗茶系列
+    { name: "台灣靛紅 (中)", price: 25 },
+    { name: "台灣靛紅 (大)", price: 30 },
+    { name: "台灣純綠 (中)", price: 25 },
+    { name: "台灣純綠 (大)", price: 30 },
+    { name: "台灣青茶 (中)", price: 25 },
+    { name: "台灣青茶 (大)", price: 30 },
+    { name: "台灣烏龍 (中)", price: 25 },
+    { name: "台灣烏龍 (大)", price: 30 },
+    // 伯爵紅茶系列
+    { name: "伯爵紅茶 (中)", price: 25 },
+    { name: "伯爵紅茶 (大)", price: 30 },
+    { name: "珍珠伯爵 (中)", price: 30 },
+    { name: "珍珠伯爵 (大)", price: 35 },
+    { name: "伯爵奶茶 (中)", price: 40 },
+    { name: "伯爵奶茶 (大)", price: 45 },
+    { name: "伯爵鮮奶茶 (中)", price: 45 },
+    { name: "伯爵鮮奶茶 (大)", price: 55 },
+    // 奶茶系列
+    { name: "奶茶 (中)", price: 40 },
+    { name: "奶茶 (大)", price: 45 },
+    { name: "鮮奶茶 (中)", price: 45 },
+    { name: "鮮奶茶 (大)", price: 55 },
+    { name: "珍珠奶茶 (中)", price: 45 },
+    { name: "珍珠奶茶 (大)", price: 50 },
+    { name: "波霸奶茶 (中)", price: 45 },
+    { name: "波霸奶茶 (大)", price: 50 },
+    // 特調系列
+    { name: "檸檬紅茶 (中)", price: 45 },
+    { name: "檸檬紅茶 (大)", price: 50 },
+    { name: "冬瓜茶 (中)", price: 25 },
+    { name: "冬瓜茶 (大)", price: 30 },
+    { name: "多多綠茶 (中)", price: 40 },
+    { name: "多多綠茶 (大)", price: 45 }
+  ],
+  seventea: [
+    // 經典茶系列
+    { name: "山萃烏龍", price: 40 },
+    { name: "茉莉綠茶", price: 35 },
+    { name: "阿薩姆紅茶", price: 35 },
+    { name: "四季春茶", price: 35 },
+    // 奶霜系列
+    { name: "山萃烏龍奶霜", price: 65 },
+    { name: "茉莉綠茶奶霜", price: 60 },
+    { name: "阿薩姆奶霜", price: 60 },
+    // 鮮奶茶系列
+    { name: "烏龍鮮奶茶", price: 55 },
+    { name: "茉莉鮮奶茶", price: 50 },
+    { name: "阿薩姆鮮奶茶", price: 50 },
+    { name: "珍珠奶茶", price: 55 },
+    // 特調系列
+    { name: "檸檬蜜茶", price: 45 },
+    { name: "蜂蜜柚子茶", price: 50 },
+    { name: "冬瓜檸檬", price: 40 },
+    { name: "多多綠茶", price: 45 }
+  ],
+  dejeng: [
+    // 烏龍茶系列
+    { name: "優酪春烏龍", price: 55 },
+    { name: "芝士奶蓋焙烏龍", price: 65 },
+    { name: "烘吉鮮奶", price: 60 },
+    { name: "焙烏龍", price: 40 },
+    { name: "春烏龍", price: 35 },
+    { name: "凍頂烏龍", price: 45 },
+    // 特調系列
+    { name: "檸檬烏龍", price: 50 },
+    { name: "蜂蜜烏龍", price: 45 },
+    { name: "冬瓜烏龍", price: 40 },
+    { name: "柚子烏龍", price: 50 },
+    // 鮮奶系列
+    { name: "烏龍鮮奶茶", price: 55 },
+    { name: "焙烏龍鮮奶", price: 60 },
+    { name: "珍珠烏龍鮮奶", price: 65 },
+    { name: "布丁烏龍鮮奶", price: 70 }
+  ],
+  yimuday: [
+    // 招牌系列
+    { name: "一沐日招牌奶茶", price: 50 },
+    { name: "黑糖珍珠鮮奶", price: 60 },
+    { name: "芋頭鮮奶", price: 65 },
+    { name: "抹茶拿鐵", price: 70 },
+    // 茶類系列
+    { name: "紅茶", price: 30 },
+    { name: "綠茶", price: 30 },
+    { name: "烏龍茶", price: 35 },
+    { name: "茉莉花茶", price: 35 },
+    // 鮮奶茶系列
+    { name: "珍珠奶茶", price: 55 },
+    { name: "布丁奶茶", price: 60 },
+    { name: "椰果奶茶", price: 55 },
+    { name: "仙草凍奶茶", price: 55 },
+    // 特調系列
+    { name: "檸檬綠茶", price: 45 },
+    { name: "蜂蜜檸檬", price: 50 },
+    { name: "冬瓜茶", price: 35 },
+    { name: "多多綠茶", price: 50 }
+  ]
+};
+
+let currentMenu = [];
+let orders = [];
+let filteredOrders = [];
+
+// 從本地存儲載入訂單
+function loadOrders() {
+  const saved = localStorage.getItem('drinkOrders');
+  if (saved) {
+    orders = JSON.parse(saved);
+    filteredOrders = [...orders];
+    showOrders();
+  }
+}
+
+// 保存訂單到本地存儲
+function saveOrders() {
+  localStorage.setItem('drinkOrders', JSON.stringify(orders));
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+  loadOrders();
+});
+
+document.getElementById('store-select').addEventListener('change', function() {
+  const store = this.value;
+  if (!store) {
+    document.getElementById('menu-section').style.display = 'none';
+    return;
+  }
+
+  if (store === 'custom') {
+    document.getElementById('menu-upload').click();
+    return;
+  }
+
+  currentMenu = menus[store] || [];
+  showMenu(currentMenu);
+});
+
+document.getElementById('upload-menu-btn').onclick = () => {
+  document.getElementById('menu-upload').click();
+};
+
+document.getElementById('menu-upload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      if (results.data && results.data.length > 0) {
+        // 取得店家名稱（從第一筆資料中讀取）
+        const firstItem = results.data[0];
+        const storeName = firstItem.store || firstItem['飲料店名稱'] || firstItem['店家名稱'] || '自訂菜單';
+
+        // 確保資料格式正確
+        currentMenu = results.data.map(item => ({
+          name: item.name || item['飲料名稱'] || '',
+          price: parseInt(item.price || item['價格'] || 0)
+        })).filter(item => item.name && item.price);
+
+        if (currentMenu.length > 0) {
+          // 更新菜單標題顯示店家名稱
+          const menuTitle = document.querySelector('#menu-section h2');
+          if (menuTitle) {
+            menuTitle.textContent = `🍹 ${storeName} 菜單`;
+          }
+
+          showMenu(currentMenu);
+          alert(`成功載入 ${storeName} 的 ${currentMenu.length} 項飲料！`);
+        } else {
+          alert('CSV 檔案格式不正確，請確保包含以下欄位：\n- 飲料店名稱 (store)\n- 飲料名稱 (name)\n- 價格 (price)');
+        }
+      }
+    },
+    error: function(error) {
+      alert('檔案讀取失敗：' + error.message);
+    }
+  });
+});
+
+// 搜尋功能
+document.getElementById('search-orders').addEventListener('input', function() {
+  const searchTerm = this.value.toLowerCase();
+  if (!searchTerm) {
+    filteredOrders = [...orders];
+  } else {
+    filteredOrders = orders.filter(order =>
+      order.teacher.toLowerCase().includes(searchTerm) ||
+      order.drink.toLowerCase().includes(searchTerm)
+    );
+  }
+  showOrders();
+});
+
+// 清空所有訂單
+document.getElementById('clear-all-orders').addEventListener('click', function() {
+  if (confirm('確定要清空所有訂單嗎？此操作無法復原。')) {
+    orders = [];
+    filteredOrders = [];
+    saveOrders();
+    showOrders();
+  }
+});
+
+// 下載菜單範本下拉選單
+document.getElementById('download-menu-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const dropdown = document.getElementById('download-menu-dropdown');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+});
+
+// 點擊其他地方關閉下拉選單
+document.addEventListener('click', function() {
+  document.getElementById('download-menu-dropdown').style.display = 'none';
+});
+
+// 編輯菜單按鈕事件
+document.getElementById('edit-menu-btn').addEventListener('click', function() {
+  document.getElementById('menu-edit-modal').style.display = 'flex';
+});
+
+// 編輯店家選擇事件
+document.getElementById('edit-store-select').addEventListener('change', function() {
+  const store = this.value;
+  if (!store) {
+    document.getElementById('menu-edit-list').innerHTML = '<p>請先選擇要編輯的店家</p>';
+    return;
+  }
+
+  showEditMenu(store);
+});
+
+let currentEditStore = '';
+let editingMenu = [];
+
+function showMenu(menu) {
+  if (!menu || menu.length === 0) {
+    document.getElementById('menu-section').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('menu-section').style.display = 'block';
+  const container = document.getElementById('menu-container');
+
+  let html = '<form id="order-form">';
+  html += '<div class="form-group">';
+  html += '<label for="teacher-name">👨‍🏫 老師姓名：</label>';
+  html += '<input type="text" id="teacher-name" placeholder="請輸入老師姓名" required name="teacher" />';
+  html += '</div>';
+
+  html += '<div class="form-group">';
+  html += '<label>🍹 選擇飲料：</label>';
+  html += '</div>';
+
+  menu.forEach((item, idx) => {
+    html += `<div class="menu-item" data-idx="${idx}">
+      <div class="drink-info">
+        <input type="radio" required name="drink" value="${item.name}" id="drink${idx}" data-price="${item.price}" />
+        <label for="drink${idx}" class="drink-name">${item.name}</label>
+        <span class="drink-price">$${item.price}</span>
+      </div>
+      <div class="options">
+        <div class="option-group">
+          <label>🍯 糖度：</label>
+          <select name="sugar${idx}">
+            <option value="正常">正常</option>
+            <option value="少糖">少糖</option>
+            <option value="半糖">半糖</option>
+            <option value="微糖">微糖</option>
+            <option value="無糖">無糖</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label>🧊 冰塊：</label>
+          <select name="ice${idx}">
+            <option value="正常">正常</option>
+            <option value="少冰">少冰</option>
+            <option value="微冰">微冰</option>
+            <option value="去冰">去冰</option>
+            <option value="熱">熱</option>
+          </select>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  html += '<div style="text-align: center; margin-top: 20px;">';
+  html += '<button type="submit" class="btn btn-success">✅ 加入訂單</button>';
+  html += '</div>';
+  html += '</form>';
+
+  container.innerHTML = html;
+
+  // 添加選擇效果
+  const radioButtons = container.querySelectorAll('input[type="radio"]');
+  radioButtons.forEach(radio => {
+    radio.addEventListener('change', function() {
+      // 移除所有選中樣式
+      container.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      // 添加選中樣式
+      this.closest('.menu-item').classList.add('selected');
+    });
+  });
+
+  document.getElementById('order-form').onsubmit = function(e) {
+    e.preventDefault();
+    const fd = new FormData(this);
+    const teacher = fd.get("teacher").trim();
+
+    if (!teacher) {
+      alert('請輸入老師姓名！');
+      return;
+    }
+
+    let selectedDrink = null;
+    let sugar = "";
+    let ice = "";
+    let price = 0;
+
+    currentMenu.forEach((item, idx) => {
+      if (fd.get("drink") === item.name) {
+        selectedDrink = item.name;
+        sugar = fd.get("sugar" + idx);
+        ice = fd.get("ice" + idx);
+        price = item.price;
+      }
+    });
+
+    if (!selectedDrink) {
+      alert('請選擇一項飲料！');
+      return;
+    }
+
+    const newOrder = {
+      id: Date.now(),
+      teacher,
+      drink: selectedDrink,
+      sugar,
+      ice,
+      price,
+      timestamp: new Date().toLocaleString('zh-TW')
+    };
+
+    orders.push(newOrder);
+    filteredOrders = [...orders];
+    saveOrders();
+    showOrders();
+    this.reset();
+
+    // 移除選中樣式
+    container.querySelectorAll('.menu-item').forEach(item => {
+      item.classList.remove('selected');
+    });
+
+    alert(`✅ 已為 ${teacher} 老師加入訂單：${selectedDrink}`);
+  };
+}
+
+function showOrders() {
+  const container = document.getElementById('order-summary');
+  const totalSection = document.getElementById('total-section');
+  const downloadBtn = document.getElementById('download-csv');
+  const clearBtn = document.getElementById('clear-all-orders');
+
+  if (orders.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">📝 還沒有任何訂單，開始點餐吧！</p>';
+    totalSection.style.display = 'none';
+    downloadBtn.style.display = 'none';
+    clearBtn.style.display = 'none';
+    return;
+  }
+
+  // 計算總計
+  const totalAmount = orders.reduce((sum, order) => sum + (order.price || 0), 0);
+  const totalCount = orders.length;
+
+  // 顯示總計
+  document.getElementById('total-amount').textContent = `$${totalAmount}`;
+  document.getElementById('order-count').textContent = `共 ${totalCount} 杯飲料`;
+  totalSection.style.display = 'block';
+
+  // 顯示訂單表格
+  let html = '<table>';
+  html += '<tr><th>👨‍🏫 老師</th><th>🍹 飲料</th><th>🍯 糖度</th><th>🧊 冰塊</th><th>💰 價格</th><th>⏰ 時間</th><th>🛠️ 操作</th></tr>';
+
+  const ordersToShow = filteredOrders.length > 0 ? filteredOrders : orders;
+  ordersToShow.forEach((order, index) => {
+    html += `<tr>
+      <td>${order.teacher}</td>
+      <td>${order.drink}</td>
+      <td>${order.sugar}</td>
+      <td>${order.ice}</td>
+      <td>$${order.price || 0}</td>
+      <td>${order.timestamp || ''}</td>
+      <td class="order-actions">
+        <button class="btn btn-danger" onclick="deleteOrder(${order.id})" title="刪除訂單">🗑️</button>
+        <button class="btn" onclick="editOrder(${order.id})" title="編輯訂單">✏️</button>
+      </td>
+    </tr>`;
+  });
+
+  html += '</table>';
+  container.innerHTML = html;
+
+  downloadBtn.style.display = 'inline-block';
+  clearBtn.style.display = 'inline-block';
+}
+
+// 刪除訂單
+function deleteOrder(orderId) {
+  if (confirm('確定要刪除這筆訂單嗎？')) {
+    orders = orders.filter(order => order.id !== orderId);
+    filteredOrders = filteredOrders.filter(order => order.id !== orderId);
+    saveOrders();
+    showOrders();
+  }
+}
+
+// 編輯訂單
+function editOrder(orderId) {
+  const order = orders.find(o => o.id === orderId);
+  if (!order) return;
+
+  const newTeacher = prompt('修改老師姓名：', order.teacher);
+  if (newTeacher === null) return; // 用戶取消
+
+  if (newTeacher.trim()) {
+    order.teacher = newTeacher.trim();
+    order.timestamp = new Date().toLocaleString('zh-TW') + ' (已編輯)';
+
+    // 更新 filteredOrders 中的對應項目
+    const filteredIndex = filteredOrders.findIndex(o => o.id === orderId);
+    if (filteredIndex !== -1) {
+      filteredOrders[filteredIndex] = order;
+    }
+
+    saveOrders();
+    showOrders();
+  }
+}
+
+document.getElementById('download-csv').onclick = function() {
+  if (orders.length === 0) {
+    alert('沒有訂單可以下載！');
+    return;
+  }
+
+  // 準備 CSV 資料
+  const csvData = orders.map(order => ({
+    '老師姓名': order.teacher,
+    '飲料名稱': order.drink,
+    '糖度': order.sugar,
+    '冰塊': order.ice,
+    '價格': order.price || 0,
+    '訂購時間': order.timestamp || ''
+  }));
+
+  // 添加總計行
+  const totalAmount = orders.reduce((sum, order) => sum + (order.price || 0), 0);
+  csvData.push({
+    '老師姓名': '總計',
+    '飲料名稱': `${orders.length} 杯`,
+    '糖度': '',
+    '冰塊': '',
+    '價格': totalAmount,
+    '訂購時間': new Date().toLocaleString('zh-TW')
+  });
+
+  const csv = Papa.unparse(csvData);
+
+  // 添加 BOM 以支援中文
+  const BOM = '\uFEFF';
+  const blob = new Blob([BOM + csv], {type: "text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+
+  // 生成檔案名稱
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  const timeStr = now.toTimeString().slice(0, 5).replace(':', '');
+  a.download = `飲料訂單_${dateStr}_${timeStr}.csv`;
+
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  alert(`✅ 訂單已下載！共 ${orders.length} 筆訂單，總金額 $${totalAmount}`);
+};
+
+// 下載菜單範本功能
+function downloadMenuTemplate(format) {
+  // 關閉下拉選單
+  document.getElementById('download-menu-dropdown').style.display = 'none';
+
+  // 準備範本資料
+  const templateData = [
+    { store: "範例飲料店", name: "紅茶", price: 30 },
+    { store: "範例飲料店", name: "綠茶", price: 30 },
+    { store: "範例飲料店", name: "烏龍茶", price: 35 },
+    { store: "範例飲料店", name: "珍珠奶茶", price: 50 },
+    { store: "範例飲料店", name: "珍珠綠茶", price: 50 },
+    { store: "範例飲料店", name: "布丁奶茶", price: 55 },
+    { store: "範例飲料店", name: "椰果奶茶", price: 50 },
+    { store: "範例飲料店", name: "仙草凍奶茶", price: 55 },
+    { store: "範例飲料店", name: "芋頭奶茶", price: 60 },
+    { store: "範例飲料店", name: "抹茶拿鐵", price: 65 },
+    { store: "範例飲料店", name: "檸檬綠茶", price: 40 },
+    { store: "範例飲料店", name: "蜂蜜檸檬", price: 45 },
+    { store: "範例飲料店", name: "冬瓜茶", price: 35 },
+    { store: "範例飲料店", name: "青草茶", price: 35 },
+    { store: "範例飲料店", name: "多多綠茶", price: 45 }
+  ];
+
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  const timeStr = now.toTimeString().slice(0, 5).replace(':', '');
+
+  let content, mimeType, extension, filename;
+
+  switch(format) {
+    case 'csv':
+      // CSV 格式
+      content = '飲料店名稱,飲料名稱,價格\n' + templateData.map(item => `${item.store},${item.name},${item.price}`).join('\n');
+      content = '\uFEFF' + content; // 添加 BOM 支援中文
+      mimeType = 'text/csv;charset=utf-8';
+      extension = 'csv';
+      break;
+
+    case 'excel':
+      // Excel 相容的 CSV 格式
+      content = '飲料店名稱,飲料名稱,價格\n' + templateData.map(item => `"${item.store}","${item.name}",${item.price}`).join('\n');
+      content = '\uFEFF' + content; // 添加 BOM 支援中文
+      mimeType = 'application/vnd.ms-excel;charset=utf-8';
+      extension = 'csv';
+      break;
+
+    case 'json':
+      // JSON 格式
+      content = JSON.stringify({
+        "說明": "飲料菜單範本 - 請修改 store、name 和 price 欄位",
+        "格式": "每個飲料項目需包含 store（飲料店名稱）、name（飲料名稱）和 price（價格）",
+        "欄位說明": {
+          "store": "飲料店名稱（必填）",
+          "name": "飲料名稱（必填）",
+          "price": "價格（必填，數字）"
+        },
+        "範例": templateData,
+        "菜單": templateData
+      }, null, 2);
+      mimeType = 'application/json;charset=utf-8';
+      extension = 'json';
+      break;
+
+    case 'txt':
+      // 文字格式
+      content = '飲料菜單範本\n';
+      content += '='.repeat(20) + '\n\n';
+      content += '格式說明：\n';
+      content += '- 每行一個飲料項目\n';
+      content += '- 格式：飲料店名稱,飲料名稱,價格\n';
+      content += '- 請將此檔案轉換為 CSV 格式後上傳\n\n';
+      content += '欄位說明：\n';
+      content += '- 飲料店名稱：您的飲料店名稱（必填）\n';
+      content += '- 飲料名稱：飲料的名稱（必填）\n';
+      content += '- 價格：飲料的價格，只填數字（必填）\n\n';
+      content += '範例菜單：\n';
+      content += '-'.repeat(25) + '\n';
+      content += '飲料店名稱,飲料名稱,價格\n';
+      content += templateData.map(item => `${item.store},${item.name},${item.price}`).join('\n');
+      content += '\n\n';
+      content += '使用說明：\n';
+      content += '1. 複製上方範例菜單內容\n';
+      content += '2. 修改飲料店名稱、飲料名稱和價格\n';
+      content += '3. 儲存為 .csv 檔案\n';
+      content += '4. 在系統中上傳 CSV 檔案\n';
+      content += '5. 系統會自動顯示您的飲料店名稱\n';
+      mimeType = 'text/plain;charset=utf-8';
+      extension = 'txt';
+      break;
+  }
+
+  filename = `菜單範本_${dateStr}_${timeStr}.${extension}`;
+
+  // 建立並下載檔案
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  // 顯示成功訊息
+  const formatNames = {
+    'csv': 'CSV',
+    'excel': 'Excel 相容 CSV',
+    'json': 'JSON',
+    'txt': '文字'
+  };
+
+  alert(`✅ ${formatNames[format]} 格式菜單範本已下載！\n檔案名稱：${filename}\n\n包含 ${templateData.length} 個範例飲料項目，請修改後上傳使用。`);
+}
+
+// 顯示編輯菜單
+function showEditMenu(store) {
+  currentEditStore = store;
+  editingMenu = JSON.parse(JSON.stringify(menus[store] || [])); // 深拷貝
+
+  const container = document.getElementById('menu-edit-list');
+
+  if (editingMenu.length === 0) {
+    container.innerHTML = '<p>此店家目前沒有菜單項目</p>';
+    return;
+  }
+
+  let html = '';
+  editingMenu.forEach((item, index) => {
+    html += `
+      <div class="edit-item" data-index="${index}">
+        <input type="text" value="${item.name}" placeholder="飲料名稱" onchange="updateDrinkName(${index}, this.value)" />
+        <span>$</span>
+        <input type="number" class="price-input" value="${item.price}" min="0" placeholder="價格" onchange="updateDrinkPrice(${index}, this.value)" />
+        <button class="delete-btn" onclick="deleteDrink(${index})">🗑️</button>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// 更新飲料名稱
+function updateDrinkName(index, name) {
+  if (editingMenu[index]) {
+    editingMenu[index].name = name.trim();
+  }
+}
+
+// 更新飲料價格
+function updateDrinkPrice(index, price) {
+  if (editingMenu[index]) {
+    editingMenu[index].price = parseInt(price) || 0;
+  }
+}
+
+// 刪除飲料
+function deleteDrink(index) {
+  if (confirm('確定要刪除這個飲料項目嗎？')) {
+    editingMenu.splice(index, 1);
+    showEditMenu(currentEditStore);
+  }
+}
+
+// 新增飲料
+function addNewDrink() {
+  if (!currentEditStore) {
+    alert('請先選擇要編輯的店家！');
+    return;
+  }
+
+  const name = prompt('請輸入新飲料名稱：');
+  if (!name || !name.trim()) return;
+
+  const price = prompt('請輸入價格：');
+  const priceNum = parseInt(price);
+  if (isNaN(priceNum) || priceNum < 0) {
+    alert('請輸入有效的價格！');
+    return;
+  }
+
+  editingMenu.push({
+    name: name.trim(),
+    price: priceNum
+  });
+
+  showEditMenu(currentEditStore);
+}
+
+// 儲存菜單變更
+function saveMenuChanges() {
+  if (!currentEditStore) {
+    alert('請先選擇要編輯的店家！');
+    return;
+  }
+
+  // 驗證資料
+  const validItems = editingMenu.filter(item => item.name && item.name.trim() && item.price >= 0);
+
+  if (validItems.length === 0) {
+    alert('請至少保留一個有效的飲料項目！');
+    return;
+  }
+
+  if (confirm(`確定要儲存對 ${getStoreName(currentEditStore)} 菜單的變更嗎？\n\n將會更新 ${validItems.length} 個飲料項目。`)) {
+    // 更新菜單
+    menus[currentEditStore] = validItems;
+
+    // 如果當前正在顯示這個店家的菜單，重新載入
+    const currentStore = document.getElementById('store-select').value;
+    if (currentStore === currentEditStore) {
+      currentMenu = menus[currentEditStore];
+      showMenu(currentMenu);
+    }
+
+    alert(`✅ ${getStoreName(currentEditStore)} 的菜單已成功更新！`);
+    closeMenuEditModal();
+  }
+}
+
+// 關閉編輯視窗
+function closeMenuEditModal() {
+  document.getElementById('menu-edit-modal').style.display = 'none';
+  document.getElementById('edit-store-select').value = '';
+  document.getElementById('menu-edit-list').innerHTML = '<p>請先選擇要編輯的店家</p>';
+  currentEditStore = '';
+  editingMenu = [];
+}
+
+// 獲取店家名稱
+function getStoreName(storeId) {
+  const storeNames = {
+    'milkshop': '迷客夏 Milk Shop',
+    '50lan': '50嵐',
+    'comebuy': '清心福全',
+    'gongcha': '貢茶',
+    'truedan': '珍煮丹',
+    'songben': '茶之魔手',
+    'seventea': '七盞茶',
+    'dejeng': '得正',
+    'yimuday': '一沐日'
+  };
+  return storeNames[storeId] || storeId;
+}
+
+</script>
+</html>
