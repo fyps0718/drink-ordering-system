@@ -398,6 +398,300 @@
       transform: translateY(-2px);
     }
 
+    /* 新的菜單卡片樣式 */
+    .menu-items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .menu-item-card {
+      background: white;
+      border: 2px solid #e9ecef;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .menu-item-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 8px 15px rgba(102, 126, 234, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .drink-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f8f9fa;
+    }
+
+    .drink-name {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .drink-price {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #28a745;
+      background: #e8f5e8;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .drink-options {
+      margin-bottom: 15px;
+    }
+
+    .option-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .option-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .option-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #555;
+      font-size: 0.9em;
+    }
+
+    .teacher-input, .quantity-select, .sugar-select, .ice-select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    .teacher-input:focus, .quantity-select:focus, .sugar-select:focus, .ice-select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .add-order-section {
+      text-align: center;
+      padding-top: 15px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .add-order-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1em;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .add-order-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    /* 店家標籤樣式 */
+    .store-badge {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* 菜單控制區域樣式 */
+    .menu-controls {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      border: 2px solid #e9ecef;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .teacher-name-section, .search-section {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .teacher-name-section label, .search-section label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 1em;
+    }
+
+    #global-teacher-name, #drink-search {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    #global-teacher-name:focus, #drink-search:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
+    }
+
+    /* 搜尋輸入框容器 */
+    .search-input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #999;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .clear-search-btn:hover {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .clear-search-btn:active {
+      transform: scale(0.95);
+    }
+
+    @media (max-width: 768px) {
+      /* 基礎字體大小調整 */
+      body {
+        font-size: 16px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      h3 {
+        font-size: 1.2em;
+      }
+
+      /* 菜單控制區域手機優化 */
+      .menu-controls {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .teacher-name-section, .search-section {
+        min-width: auto;
+      }
+
+      .teacher-name-section label, .search-section label {
+        font-size: 1.1em;
+      }
+
+      #global-teacher-name, #drink-search {
+        font-size: 18px; /* 防止 iOS 縮放 */
+        padding: 15px;
+      }
+
+      /* 菜單卡片手機優化 */
+      .menu-items-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .menu-item-card {
+        padding: 15px;
+      }
+
+      .drink-name {
+        font-size: 1.3em;
+      }
+
+      .drink-price {
+        font-size: 1.4em;
+        padding: 8px 15px;
+      }
+
+      .option-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .option-group label {
+        font-size: 1em;
+        margin-bottom: 8px;
+      }
+
+      .teacher-input, .quantity-select, .sugar-select, .ice-select {
+        font-size: 18px; /* 防止 iOS 縮放 */
+        padding: 12px 15px;
+      }
+
+      .add-order-btn {
+        font-size: 1.2em;
+        padding: 15px;
+      }
+
+      /* 表格手機優化 */
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 8px 4px;
+        font-size: 14px;
+      }
+
+      /* 按鈕手機優化 */
+      .btn {
+        font-size: 16px;
+        padding: 12px 20px;
+        min-height: 44px; /* iOS 建議的最小觸控區域 */
+      }
+
+      /* 搜尋框手機優化 */
+      .search-container input {
+        font-size: 18px;
+        padding: 15px;
+      }
+    }
+
     @media (max-width: 768px) {
       .options {
         grid-template-columns: 1fr;
@@ -463,6 +757,22 @@
       <!-- 菜單顯示區域 -->
       <div class="section" id="menu-section" style="display:none">
         <h2>🍹 菜單</h2>
+
+        <!-- 老師姓名和搜尋區域 -->
+        <div class="menu-controls">
+          <div class="teacher-name-section">
+            <label for="global-teacher-name">👨‍🏫 老師姓名：</label>
+            <input type="text" id="global-teacher-name" placeholder="請輸入老師姓名" />
+          </div>
+          <div class="search-section">
+            <label for="drink-search">🔍 搜尋飲料：</label>
+            <div class="search-input-container">
+              <input type="text" id="drink-search" placeholder="輸入飲料名稱搜尋..." />
+              <button type="button" id="clear-search" class="clear-search-btn" title="清除搜尋">✕</button>
+            </div>
+          </div>
+        </div>
+
         <div id="menu-container"></div>
       </div>
 
@@ -481,6 +791,7 @@
         <div style="text-align: center; margin-top: 20px;">
           <button class="btn btn-success" id="download-csv" style="display:none">📥 下載訂單 CSV</button>
           <button class="btn btn-danger" id="clear-all-orders" style="display:none">🗑️ 清空所有訂單</button>
+          <button class="btn btn-warning" id="admin-reset" style="display:none">🔐 管理員重置</button>
         </div>
       </div>
     </div>
@@ -818,25 +1129,106 @@ const menus = {
 let currentMenu = [];
 let orders = [];
 let filteredOrders = [];
+let editingOrderId = null;
+let isOnlineMode = true; // 是否使用線上模式
 
-// 從本地存儲載入訂單
-function loadOrders() {
+// 檢查是否為線上模式
+function checkOnlineMode() {
+  return window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+}
+
+// API 請求函數
+async function apiRequest(url, options = {}) {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+      },
+      ...options
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('API 請求錯誤:', error);
+    // 如果 API 失敗，回退到本地存儲
+    if (isOnlineMode) {
+      console.log('回退到本地存儲模式');
+      isOnlineMode = false;
+    }
+    throw error;
+  }
+}
+
+// 載入訂單（線上模式或本地模式）
+async function loadOrders() {
+  isOnlineMode = checkOnlineMode();
+
+  if (isOnlineMode) {
+    try {
+      const data = await apiRequest('/api/orders');
+      orders = data.orders || [];
+      filteredOrders = [...orders];
+      updateOrderSummary(data.totalAmount || 0, data.totalCount || 0);
+      showOrders();
+      console.log('✅ 從伺服器載入訂單:', orders.length, '筆');
+      return;
+    } catch (error) {
+      console.log('⚠️ 無法從伺服器載入訂單，使用本地存儲');
+      isOnlineMode = false;
+    }
+  }
+
+  // 本地存儲模式
   const saved = localStorage.getItem('drinkOrders');
   if (saved) {
     orders = JSON.parse(saved);
     filteredOrders = [...orders];
     showOrders();
+    console.log('📱 從本地存儲載入訂單:', orders.length, '筆');
   }
 }
 
-// 保存訂單到本地存儲
-function saveOrders() {
-  localStorage.setItem('drinkOrders', JSON.stringify(orders));
+// 儲存訂單（線上模式或本地模式）
+async function saveOrders() {
+  if (isOnlineMode) {
+    // 線上模式不需要手動儲存，API 會自動處理
+    return true;
+  } else {
+    // 本地存儲模式
+    localStorage.setItem('drinkOrders', JSON.stringify(orders));
+    return true;
+  }
+}
+
+// 更新訂單統計
+function updateOrderSummary(totalAmount, totalCount) {
+  document.getElementById('total-amount').textContent = `$${totalAmount}`;
+  document.getElementById('order-count').textContent = `共 ${totalCount} 杯飲料`;
 }
 
 // 初始化
-document.addEventListener('DOMContentLoaded', function() {
-  loadOrders();
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log('🚀 飲料點餐系統初始化中...');
+
+  // 檢查運行模式
+  isOnlineMode = checkOnlineMode();
+  console.log('🌐 運行模式:', isOnlineMode ? '線上模式' : '本地模式');
+
+  // 載入訂單
+  await loadOrders();
+
+  // 顯示模式資訊
+  const modeInfo = document.createElement('div');
+  modeInfo.style.cssText = 'position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; z-index: 1000;';
+  modeInfo.textContent = isOnlineMode ? '🌐 線上協作模式' : '📱 本地模式';
+  document.body.appendChild(modeInfo);
+
+  console.log('✅ 系統初始化完成');
 });
 
 document.getElementById('store-select').addEventListener('change', function() {
@@ -913,12 +1305,66 @@ document.getElementById('search-orders').addEventListener('input', function() {
 });
 
 // 清空所有訂單
-document.getElementById('clear-all-orders').addEventListener('click', function() {
+document.getElementById('clear-all-orders').addEventListener('click', async function() {
   if (confirm('確定要清空所有訂單嗎？此操作無法復原。')) {
-    orders = [];
-    filteredOrders = [];
-    saveOrders();
-    showOrders();
+    if (isOnlineMode) {
+      // 線上模式使用本地清空（不需要密碼）
+      orders = [];
+      filteredOrders = [];
+      await saveOrders();
+      showOrders();
+    } else {
+      // 本地模式
+      orders = [];
+      filteredOrders = [];
+      await saveOrders();
+      showOrders();
+    }
+  }
+});
+
+// 管理員重置功能
+document.getElementById('admin-reset').addEventListener('click', async function() {
+  const password = prompt('請輸入管理員密碼：');
+
+  if (!password) {
+    return;
+  }
+
+  if (password !== '0718') {
+    alert('❌ 密碼錯誤！');
+    return;
+  }
+
+  if (!confirm('⚠️ 管理員重置將清空所有訂單資料，此操作無法復原。\n確定要繼續嗎？')) {
+    return;
+  }
+
+  try {
+    if (isOnlineMode) {
+      // 線上模式：使用 API 重置
+      const result = await apiRequest('/api/admin/reset', {
+        method: 'POST',
+        body: JSON.stringify({ password: password })
+      });
+
+      if (result.success) {
+        await loadOrders(); // 重新載入訂單
+        alert('✅ 管理員重置成功！所有訂單已清空。');
+      } else {
+        throw new Error(result.message || '重置失敗');
+      }
+    } else {
+      // 本地模式
+      orders = [];
+      filteredOrders = [];
+      await saveOrders();
+      showOrders();
+      alert('✅ 管理員重置成功！所有訂單已清空。');
+    }
+  } catch (error) {
+    console.error('管理員重置錯誤:', error);
+    alert('❌ 重置失敗：' + error.message);
   }
 });
 
@@ -962,56 +1408,209 @@ function showMenu(menu) {
   document.getElementById('menu-section').style.display = 'block';
   const container = document.getElementById('menu-container');
 
-  let html = '<form id="order-form">';
-  html += '<div class="form-group">';
-  html += '<label for="teacher-name">👨‍🏫 老師姓名：</label>';
-  html += '<input type="text" id="teacher-name" placeholder="請輸入老師姓名" required name="teacher" />';
-  html += '</div>';
+  // 獲取當前選擇的店家名稱
+  const storeSelect = document.getElementById('store-select');
+  const currentStoreName = storeSelect.options[storeSelect.selectedIndex].text;
 
-  html += '<div class="form-group">';
-  html += '<label>🍹 選擇飲料：</label>';
-  html += '</div>';
+  let html = '<div class="menu-items-container">';
 
   menu.forEach((item, idx) => {
-    html += `<div class="menu-item" data-idx="${idx}">
-      <div class="drink-info">
-        <input type="radio" required name="drink" value="${item.name}" id="drink${idx}" data-price="${item.price}" />
-        <label for="drink${idx}" class="drink-name">${item.name}</label>
+    html += `<div class="menu-item-card" data-idx="${idx}">
+      <div class="drink-header">
+        <h3 class="drink-name">${item.name}</h3>
         <span class="drink-price">$${item.price}</span>
       </div>
-      <div class="options">
-        <div class="option-group">
-          <label>🍯 糖度：</label>
-          <select name="sugar${idx}">
-            <option value="正常">正常</option>
-            <option value="少糖">少糖</option>
-            <option value="半糖">半糖</option>
-            <option value="微糖">微糖</option>
-            <option value="無糖">無糖</option>
-          </select>
+
+      <div class="drink-options">
+        <div class="option-row">
+          <div class="option-group">
+            <label>🔢 數量：</label>
+            <select class="quantity-select" data-idx="${idx}">
+              <option value="1">1杯</option>
+              <option value="2">2杯</option>
+              <option value="3">3杯</option>
+              <option value="4">4杯</option>
+              <option value="5">5杯</option>
+              <option value="6">6杯</option>
+              <option value="7">7杯</option>
+              <option value="8">8杯</option>
+              <option value="9">9杯</option>
+              <option value="10">10杯</option>
+            </select>
+          </div>
         </div>
-        <div class="option-group">
-          <label>🧊 冰塊：</label>
-          <select name="ice${idx}">
-            <option value="正常">正常</option>
-            <option value="少冰">少冰</option>
-            <option value="微冰">微冰</option>
-            <option value="去冰">去冰</option>
-            <option value="熱">熱</option>
-          </select>
+
+        <div class="option-row">
+          <div class="option-group">
+            <label>🍯 糖度：</label>
+            <select class="sugar-select" data-idx="${idx}">
+              <option value="正常">正常</option>
+              <option value="少糖">少糖</option>
+              <option value="半糖">半糖</option>
+              <option value="微糖">微糖</option>
+              <option value="無糖">無糖</option>
+            </select>
+          </div>
+          <div class="option-group">
+            <label>🧊 冰塊：</label>
+            <select class="ice-select" data-idx="${idx}">
+              <option value="正常">正常</option>
+              <option value="少冰">少冰</option>
+              <option value="微冰">微冰</option>
+              <option value="去冰">去冰</option>
+              <option value="熱">熱</option>
+            </select>
+          </div>
         </div>
+      </div>
+
+      <div class="add-order-section">
+        <button type="button" class="btn btn-success add-order-btn"
+                onclick="addSingleOrder(${idx}, '${item.name}', ${item.price}, '${currentStoreName}')"
+                data-idx="${idx}">
+          ✅ 加入訂單
+        </button>
       </div>
     </div>`;
   });
 
-  html += '<div style="text-align: center; margin-top: 20px;">';
-  html += '<button type="submit" class="btn btn-success">✅ 加入訂單</button>';
   html += '</div>';
-  html += '</form>';
-
   container.innerHTML = html;
 
-  // 添加選擇效果
+  // 加入搜尋功能
+  setupDrinkSearch();
+}
+
+// 設置飲料搜尋功能
+function setupDrinkSearch() {
+  const searchInput = document.getElementById('drink-search');
+  const clearBtn = document.getElementById('clear-search');
+  if (!searchInput) return;
+
+  // 搜尋功能
+  function performSearch() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const menuCards = document.querySelectorAll('.menu-item-card');
+    let visibleCount = 0;
+
+    menuCards.forEach(card => {
+      const drinkName = card.querySelector('.drink-name').textContent.toLowerCase();
+      if (drinkName.includes(searchTerm)) {
+        card.style.display = 'block';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // 顯示/隱藏清除按鈕
+    if (clearBtn) {
+      clearBtn.style.display = searchTerm ? 'flex' : 'none';
+    }
+
+    // 如果搜尋框為空，顯示所有飲料
+    if (searchTerm === '') {
+      menuCards.forEach(card => {
+        card.style.display = 'block';
+      });
+    }
+
+    // 顯示搜尋結果數量（可選）
+    console.log(`搜尋 "${searchTerm}" 找到 ${visibleCount} 個結果`);
+  }
+
+  // 綁定搜尋事件
+  searchInput.addEventListener('input', performSearch);
+
+  // 綁定清除按鈕事件
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      searchInput.value = '';
+      performSearch();
+      searchInput.focus();
+    });
+  }
+
+  // 初始化清除按鈕狀態
+  if (clearBtn) {
+    clearBtn.style.display = 'none';
+  }
+}
+
+// 新增單個飲料訂單的函數
+async function addSingleOrder(idx, drinkName, price, storeName) {
+  const globalTeacherInput = document.getElementById('global-teacher-name');
+  const quantitySelect = document.querySelector(`.quantity-select[data-idx="${idx}"]`);
+  const sugarSelect = document.querySelector(`.sugar-select[data-idx="${idx}"]`);
+  const iceSelect = document.querySelector(`.ice-select[data-idx="${idx}"]`);
+
+  const teacher = globalTeacherInput.value.trim();
+  const quantity = parseInt(quantitySelect.value);
+  const sugar = sugarSelect.value;
+  const ice = iceSelect.value;
+
+  if (!teacher) {
+    alert('請先在上方輸入老師姓名！');
+    globalTeacherInput.focus();
+    return;
+  }
+
+  try {
+    // 根據數量創建多筆訂單
+    for (let i = 0; i < quantity; i++) {
+      const newOrder = {
+        teacher,
+        drink: drinkName,
+        sugar,
+        ice,
+        price,
+        store: storeName, // 新增店家名稱
+        quantity: 1, // 每筆訂單都是1杯
+        timestamp: new Date().toLocaleString('zh-TW')
+      };
+
+      if (isOnlineMode) {
+        // 線上模式：使用 API
+        const result = await apiRequest('/api/orders', {
+          method: 'POST',
+          body: JSON.stringify(newOrder)
+        });
+
+        if (!result.success) {
+          throw new Error(result.message || '新增訂單失敗');
+        }
+      } else {
+        // 本地模式
+        newOrder.id = Date.now().toString() + '_' + i; // 確保每筆訂單有唯一ID
+        orders.push(newOrder);
+      }
+    }
+
+    if (!isOnlineMode) {
+      filteredOrders = [...orders];
+      await saveOrders();
+      showOrders();
+    } else {
+      // 線上模式重新載入所有訂單
+      await loadOrders();
+    }
+
+    // 清空輸入（不清空老師姓名，因為是全域的）
+    quantitySelect.value = '1';
+    sugarSelect.value = '正常';
+    iceSelect.value = '正常';
+
+    // 成功提示
+    const quantityText = quantity > 1 ? `${quantity}杯` : '1杯';
+    alert(`✅ 已為 ${teacher} 老師加入訂單：${quantityText} ${drinkName} (${storeName})`);
+
+  } catch (error) {
+    console.error('新增訂單錯誤:', error);
+    alert('❌ 新增訂單失敗：' + error.message);
+  }
+}
+
+// 移除舊的表單提交處理（因為現在不需要了）
   const radioButtons = container.querySelectorAll('input[type="radio"]');
   radioButtons.forEach(radio => {
     radio.addEventListener('change', function() {
@@ -1024,7 +1623,7 @@ function showMenu(menu) {
     });
   });
 
-  document.getElementById('order-form').onsubmit = function(e) {
+  document.getElementById('order-form').onsubmit = async function(e) {
     e.preventDefault();
     const fd = new FormData(this);
     const teacher = fd.get("teacher").trim();
@@ -1054,7 +1653,6 @@ function showMenu(menu) {
     }
 
     const newOrder = {
-      id: Date.now(),
       teacher,
       drink: selectedDrink,
       sugar,
@@ -1063,19 +1661,42 @@ function showMenu(menu) {
       timestamp: new Date().toLocaleString('zh-TW')
     };
 
-    orders.push(newOrder);
-    filteredOrders = [...orders];
-    saveOrders();
-    showOrders();
-    this.reset();
+    try {
+      if (isOnlineMode) {
+        // 線上模式：使用 API
+        const result = await apiRequest('/api/orders', {
+          method: 'POST',
+          body: JSON.stringify(newOrder)
+        });
 
-    // 移除選中樣式
-    container.querySelectorAll('.menu-item').forEach(item => {
-      item.classList.remove('selected');
-    });
+        if (result.success) {
+          // 重新載入所有訂單以確保同步
+          await loadOrders();
+          alert(`✅ 已為 ${teacher} 老師加入訂單：${selectedDrink}`);
+        } else {
+          throw new Error(result.message || '新增訂單失敗');
+        }
+      } else {
+        // 本地模式
+        newOrder.id = Date.now().toString();
+        orders.push(newOrder);
+        filteredOrders = [...orders];
+        await saveOrders();
+        showOrders();
+        alert(`✅ 已為 ${teacher} 老師加入訂單：${selectedDrink}`);
+      }
 
-    alert(`✅ 已為 ${teacher} 老師加入訂單：${selectedDrink}`);
-  };
+      this.reset();
+
+      // 移除選中樣式
+      container.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+
+    } catch (error) {
+      console.error('新增訂單錯誤:', error);
+      alert('❌ 新增訂單失敗：' + error.message);
+    }
 }
 
 function showOrders() {
@@ -1083,12 +1704,14 @@ function showOrders() {
   const totalSection = document.getElementById('total-section');
   const downloadBtn = document.getElementById('download-csv');
   const clearBtn = document.getElementById('clear-all-orders');
+  const adminBtn = document.getElementById('admin-reset');
 
   if (orders.length === 0) {
     container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">📝 還沒有任何訂單，開始點餐吧！</p>';
     totalSection.style.display = 'none';
     downloadBtn.style.display = 'none';
     clearBtn.style.display = 'none';
+    adminBtn.style.display = 'none';
     return;
   }
 
@@ -1103,20 +1726,22 @@ function showOrders() {
 
   // 顯示訂單表格
   let html = '<table>';
-  html += '<tr><th>👨‍🏫 老師</th><th>🍹 飲料</th><th>🍯 糖度</th><th>🧊 冰塊</th><th>💰 價格</th><th>⏰ 時間</th><th>🛠️ 操作</th></tr>';
+  html += '<tr><th>👨‍🏫 老師</th><th>🏪 店家</th><th>🍹 飲料</th><th>🍯 糖度</th><th>🧊 冰塊</th><th>💰 價格</th><th>⏰ 時間</th><th>🛠️ 操作</th></tr>';
 
   const ordersToShow = filteredOrders.length > 0 ? filteredOrders : orders;
   ordersToShow.forEach((order, index) => {
+    const storeName = order.store || '未知店家';
     html += `<tr>
       <td>${order.teacher}</td>
+      <td><span class="store-badge">${storeName}</span></td>
       <td>${order.drink}</td>
       <td>${order.sugar}</td>
       <td>${order.ice}</td>
       <td>$${order.price || 0}</td>
       <td>${order.timestamp || ''}</td>
       <td class="order-actions">
-        <button class="btn btn-danger" onclick="deleteOrder(${order.id})" title="刪除訂單">🗑️</button>
-        <button class="btn" onclick="editOrder(${order.id})" title="編輯訂單">✏️</button>
+        <button class="btn btn-danger" onclick="deleteOrder('${order.id}')" title="刪除訂單">🗑️</button>
+        <button class="btn" onclick="editOrder('${order.id}')" title="編輯訂單">✏️</button>
       </td>
     </tr>`;
   });
@@ -1126,15 +1751,37 @@ function showOrders() {
 
   downloadBtn.style.display = 'inline-block';
   clearBtn.style.display = 'inline-block';
+  adminBtn.style.display = 'inline-block';
 }
 
 // 刪除訂單
-function deleteOrder(orderId) {
-  if (confirm('確定要刪除這筆訂單嗎？')) {
-    orders = orders.filter(order => order.id !== orderId);
-    filteredOrders = filteredOrders.filter(order => order.id !== orderId);
-    saveOrders();
-    showOrders();
+async function deleteOrder(orderId) {
+  if (!confirm('確定要刪除這筆訂單嗎？')) {
+    return;
+  }
+
+  try {
+    if (isOnlineMode) {
+      // 線上模式：使用 API
+      const result = await apiRequest(`/api/orders/${orderId}`, {
+        method: 'DELETE'
+      });
+
+      if (result.success) {
+        await loadOrders(); // 重新載入訂單
+      } else {
+        throw new Error(result.message || '刪除訂單失敗');
+      }
+    } else {
+      // 本地模式
+      orders = orders.filter(order => order.id != orderId);
+      filteredOrders = filteredOrders.filter(order => order.id != orderId);
+      await saveOrders();
+      showOrders();
+    }
+  } catch (error) {
+    console.error('刪除訂單錯誤:', error);
+    alert('❌ 刪除訂單失敗：' + error.message);
   }
 }
 

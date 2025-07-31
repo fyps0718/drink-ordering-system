@@ -1,6 +1,6 @@
 {
   "name": "drink-ordering-system",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "飲料點餐系統 - 專為鳳陽國小設計的團體點餐管理工具",
   "main": "server.js",
   "scripts": {
