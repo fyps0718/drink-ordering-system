@@ -1611,93 +1611,8 @@ async function addSingleOrder(idx, drinkName, price, storeName) {
 }
 
 // 移除舊的表單提交處理（因為現在不需要了）
-  const radioButtons = container.querySelectorAll('input[type="radio"]');
-  radioButtons.forEach(radio => {
-    radio.addEventListener('change', function() {
-      // 移除所有選中樣式
-      container.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.remove('selected');
-      });
-      // 添加選中樣式
-      this.closest('.menu-item').classList.add('selected');
-    });
-  });
 
-  document.getElementById('order-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const fd = new FormData(this);
-    const teacher = fd.get("teacher").trim();
 
-    if (!teacher) {
-      alert('請輸入老師姓名！');
-      return;
-    }
-
-    let selectedDrink = null;
-    let sugar = "";
-    let ice = "";
-    let price = 0;
-
-    currentMenu.forEach((item, idx) => {
-      if (fd.get("drink") === item.name) {
-        selectedDrink = item.name;
-        sugar = fd.get("sugar" + idx);
-        ice = fd.get("ice" + idx);
-        price = item.price;
-      }
-    });
-
-    if (!selectedDrink) {
-      alert('請選擇一項飲料！');
-      return;
-    }
-
-    const newOrder = {
-      teacher,
-      drink: selectedDrink,
-      sugar,
-      ice,
-      price,
-      timestamp: new Date().toLocaleString('zh-TW')
-    };
-
-    try {
-      if (isOnlineMode) {
-        // 線上模式：使用 API
-        const result = await apiRequest('/api/orders', {
-          method: 'POST',
-          body: JSON.stringify(newOrder)
-        });
-
-        if (result.success) {
-          // 重新載入所有訂單以確保同步
-          await loadOrders();
-          alert(`✅ 已為 ${teacher} 老師加入訂單：${selectedDrink}`);
-        } else {
-          throw new Error(result.message || '新增訂單失敗');
-        }
-      } else {
-        // 本地模式
-        newOrder.id = Date.now().toString();
-        orders.push(newOrder);
-        filteredOrders = [...orders];
-        await saveOrders();
-        showOrders();
-        alert(`✅ 已為 ${teacher} 老師加入訂單：${selectedDrink}`);
-      }
-
-      this.reset();
-
-      // 移除選中樣式
-      container.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.remove('selected');
-      });
-
-    } catch (error) {
-      console.error('新增訂單錯誤:', error);
-      alert('❌ 新增訂單失敗：' + error.message);
-    }
-}
 
 function showOrders() {
   const container = document.getElementById('order-summary');
@@ -1790,73 +1705,270 @@ function editOrder(orderId) {
   const order = orders.find(o => o.id === orderId);
   if (!order) return;
 
-  const newTeacher = prompt('修改老師姓名：', order.teacher);
-  if (newTeacher === null) return; // 用戶取消
+  // 創建編輯對話框
+  const editModal = document.createElement('div');
+  editModal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  `;
 
-  if (newTeacher.trim()) {
-    order.teacher = newTeacher.trim();
-    order.timestamp = new Date().toLocaleString('zh-TW') + ' (已編輯)';
+  editModal.innerHTML = `
+    <div style="
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    ">
+      <h3 style="margin-top: 0; color: #333; text-align: center;">✏️ 編輯訂單</h3>
 
-    // 更新 filteredOrders 中的對應項目
-    const filteredIndex = filteredOrders.findIndex(o => o.id === orderId);
-    if (filteredIndex !== -1) {
-      filteredOrders[filteredIndex] = order;
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600;">👨‍🏫 老師姓名：</label>
+        <input type="text" id="edit-teacher" value="${order.teacher}" style="
+          width: 100%;
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          font-size: 16px;
+          box-sizing: border-box;
+        ">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600;">🍹 飲料名稱：</label>
+        <input type="text" id="edit-drink" value="${order.drink}" style="
+          width: 100%;
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          font-size: 16px;
+          box-sizing: border-box;
+        ">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600;">🍯 糖度：</label>
+        <select id="edit-sugar" style="
+          width: 100%;
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          font-size: 16px;
+          box-sizing: border-box;
+        ">
+          <option value="正常" ${order.sugar === '正常' ? 'selected' : ''}>正常</option>
+          <option value="少糖" ${order.sugar === '少糖' ? 'selected' : ''}>少糖</option>
+          <option value="半糖" ${order.sugar === '半糖' ? 'selected' : ''}>半糖</option>
+          <option value="微糖" ${order.sugar === '微糖' ? 'selected' : ''}>微糖</option>
+          <option value="無糖" ${order.sugar === '無糖' ? 'selected' : ''}>無糖</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600;">🧊 冰塊：</label>
+        <select id="edit-ice" style="
+          width: 100%;
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          font-size: 16px;
+          box-sizing: border-box;
+        ">
+          <option value="正常" ${order.ice === '正常' ? 'selected' : ''}>正常</option>
+          <option value="少冰" ${order.ice === '少冰' ? 'selected' : ''}>少冰</option>
+          <option value="微冰" ${order.ice === '微冰' ? 'selected' : ''}>微冰</option>
+          <option value="去冰" ${order.ice === '去冰' ? 'selected' : ''}>去冰</option>
+          <option value="熱" ${order.ice === '熱' ? 'selected' : ''}>熱</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600;">💰 價格：</label>
+        <input type="number" id="edit-price" value="${order.price || 0}" min="0" style="
+          width: 100%;
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          font-size: 16px;
+          box-sizing: border-box;
+        ">
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button id="save-edit" style="
+          background: #28a745;
+          color: white;
+          border: none;
+          padding: 12px 20px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 600;
+        ">✅ 儲存</button>
+        <button id="cancel-edit" style="
+          background: #6c757d;
+          color: white;
+          border: none;
+          padding: 12px 20px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 600;
+        ">❌ 取消</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(editModal);
+
+  // 儲存按鈕事件
+  document.getElementById('save-edit').onclick = async function() {
+    const newTeacher = document.getElementById('edit-teacher').value.trim();
+    const newDrink = document.getElementById('edit-drink').value.trim();
+    const newSugar = document.getElementById('edit-sugar').value;
+    const newIce = document.getElementById('edit-ice').value;
+    const newPrice = parseInt(document.getElementById('edit-price').value) || 0;
+
+    if (!newTeacher || !newDrink) {
+      alert('請填寫老師姓名和飲料名稱！');
+      return;
     }
 
-    saveOrders();
-    showOrders();
-  }
+    try {
+      // 更新訂單資料
+      order.teacher = newTeacher;
+      order.drink = newDrink;
+      order.sugar = newSugar;
+      order.ice = newIce;
+      order.price = newPrice;
+      order.timestamp = new Date().toLocaleString('zh-TW') + ' (已編輯)';
+
+      // 更新 filteredOrders 中的對應項目
+      const filteredIndex = filteredOrders.findIndex(o => o.id === orderId);
+      if (filteredIndex !== -1) {
+        filteredOrders[filteredIndex] = { ...order };
+      }
+
+      if (isOnlineMode) {
+        // 線上模式：使用 API
+        const result = await apiRequest(`/api/orders/${orderId}`, {
+          method: 'PUT',
+          body: JSON.stringify(order)
+        });
+
+        if (!result.success) {
+          throw new Error(result.message || '更新訂單失敗');
+        }
+
+        await loadOrders();
+      } else {
+        // 本地模式
+        await saveOrders();
+        showOrders();
+      }
+
+      document.body.removeChild(editModal);
+      alert('✅ 訂單已成功更新！');
+    } catch (error) {
+      console.error('更新訂單錯誤:', error);
+      alert('❌ 更新訂單失敗：' + error.message);
+    }
+  };
+
+  // 取消按鈕事件
+  document.getElementById('cancel-edit').onclick = function() {
+    document.body.removeChild(editModal);
+  };
+
+  // 點擊背景關閉
+  editModal.onclick = function(e) {
+    if (e.target === editModal) {
+      document.body.removeChild(editModal);
+    }
+  };
 }
 
-document.getElementById('download-csv').onclick = function() {
+// 下載 CSV 功能
+function downloadOrdersCSV() {
   if (orders.length === 0) {
     alert('沒有訂單可以下載！');
     return;
   }
 
-  // 準備 CSV 資料
-  const csvData = orders.map(order => ({
-    '老師姓名': order.teacher,
-    '飲料名稱': order.drink,
-    '糖度': order.sugar,
-    '冰塊': order.ice,
-    '價格': order.price || 0,
-    '訂購時間': order.timestamp || ''
-  }));
+  try {
+    // 準備 CSV 資料
+    const csvData = orders.map(order => ({
+      '老師姓名': order.teacher || '',
+      '店家名稱': order.store || '未知店家',
+      '飲料名稱': order.drink || '',
+      '糖度': order.sugar || '',
+      '冰塊': order.ice || '',
+      '價格': order.price || 0,
+      '訂購時間': order.timestamp || ''
+    }));
 
-  // 添加總計行
-  const totalAmount = orders.reduce((sum, order) => sum + (order.price || 0), 0);
-  csvData.push({
-    '老師姓名': '總計',
-    '飲料名稱': `${orders.length} 杯`,
-    '糖度': '',
-    '冰塊': '',
-    '價格': totalAmount,
-    '訂購時間': new Date().toLocaleString('zh-TW')
-  });
+    // 添加總計行
+    const totalAmount = orders.reduce((sum, order) => sum + (order.price || 0), 0);
+    csvData.push({
+      '老師姓名': '總計',
+      '店家名稱': '',
+      '飲料名稱': `${orders.length} 杯`,
+      '糖度': '',
+      '冰塊': '',
+      '價格': totalAmount,
+      '訂購時間': new Date().toLocaleString('zh-TW')
+    });
 
-  const csv = Papa.unparse(csvData);
+    // 檢查 Papa Parse 是否可用
+    if (typeof Papa === 'undefined') {
+      // 如果 Papa Parse 不可用，使用簡單的 CSV 生成
+      let csvContent = '老師姓名,店家名稱,飲料名稱,糖度,冰塊,價格,訂購時間\n';
+      csvData.forEach(row => {
+        csvContent += `"${row['老師姓名']}","${row['店家名稱']}","${row['飲料名稱']}","${row['糖度']}","${row['冰塊']}","${row['價格']}","${row['訂購時間']}"\n`;
+      });
+      var csv = csvContent;
+    } else {
+      var csv = Papa.unparse(csvData);
+    }
 
-  // 添加 BOM 以支援中文
-  const BOM = '\uFEFF';
-  const blob = new Blob([BOM + csv], {type: "text/csv;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
+    // 添加 BOM 以支援中文
+    const BOM = '\uFEFF';
+    const blob = new Blob([BOM + csv], {type: "text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
 
-  // 生成檔案名稱
-  const now = new Date();
-  const dateStr = now.toISOString().slice(0, 10);
-  const timeStr = now.toTimeString().slice(0, 5).replace(':', '');
-  a.download = `飲料訂單_${dateStr}_${timeStr}.csv`;
+    // 生成檔案名稱
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0, 10);
+    const timeStr = now.toTimeString().slice(0, 5).replace(':', '');
+    a.download = `飲料訂單_${dateStr}_${timeStr}.csv`;
 
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 
-  alert(`✅ 訂單已下載！共 ${orders.length} 筆訂單，總金額 $${totalAmount}`);
-};
+    alert(`✅ 訂單已下載！共 ${orders.length} 筆訂單，總金額 $${totalAmount}`);
+  } catch (error) {
+    console.error('下載 CSV 錯誤:', error);
+    alert('❌ 下載失敗：' + error.message);
+  }
+}
+
+// 綁定下載按鈕事件
+document.getElementById('download-csv').onclick = downloadOrdersCSV;
 
 // 下載菜單範本功能
 function downloadMenuTemplate(format) {
